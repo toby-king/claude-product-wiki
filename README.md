@@ -51,10 +51,10 @@ Clone this repo into your Claude skills directory:
 
 ```bash
 # Personal install (available in all projects)
-git clone https://github.com/tobyking77/claude-product-wiki ~/.claude/skills/product-wiki
+git clone https://github.com/toby-king/claude-product-wiki ~/.claude/skills/product-wiki
 
 # Or project-only install (available in this project only)
-git clone https://github.com/tobyking77/claude-product-wiki .claude/skills/product-wiki
+git clone https://github.com/toby-king/claude-product-wiki .claude/skills/product-wiki
 ```
 
 Claude Code auto-discovers skills — no restart needed.
