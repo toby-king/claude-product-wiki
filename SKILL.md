@@ -132,17 +132,31 @@ Workflow:
 6. **Draft verifiable sections** — write the content for pages that can be sourced from code (Tech Stack, Env Vars, Integration pages, Reference pages). Mark sections as `[code-verified]` internally.
 7. **Interview** — for each page that needs user input, ask targeted questions per `references/question-bank.md`. Batch questions (3-7 at a time). Save progress between batches in case the user steps away.
 8. **Pause 3** — show full structure with all content filled in. "Ready to create these in Notion as drafts?"
-9. **Write to Notion** — follow the spec in `references/notion-structures.md` exactly. The parent page contains a callout (product one-liner) and a status paragraph, then an inline database displayed in gallery view — every sub-page is a database entry, not a loose child page. Key rules:
-   - **Starter parent**: create the page with the callout and status paragraph as body blocks, then create the database as a child of it.
-   - **User-provided parent**: do NOT modify its existing content; just create the database as a child of it.
-   - Create each top-level page inside the database (parent = database ID), so it appears as a gallery card.
-   - Apply cover image and emoji icon to every page — these render as gallery card thumbnails.
-   - Set Verification = Empty, Owner, and Tags on every database entry.
-   - **Start Here** is always the first page created. Use the template in `templates/start-here-page.md`.
-   - **Section landing pages** (Architecture, How To's, Integrations, Reference) must be created with rich body content per the section landing page pattern above and the template in `templates/section-page.md`. Never create them as blank pages.
-   - **Sub-pages** are children of their section page (not direct database children). Create them after their parent section page exists.
-   - **Overview** ends with a "Where to go next" section linking to the 3–4 most important pages.
-10. **Confirm** — tell the user where the drafts live, how many pages were created, what's in any open-questions sections, and (if a starter parent was created) explicitly invite them to redesign it manually.
+9. **Write to Notion** — follow `references/notion-structures.md` exactly. The creation order below is mandatory — each step depends on the previous one having IDs to reference.
+
+   **9a — Create the home page (always, no exceptions)**
+   Create a regular Notion page as the wiki's landing page. This is what users navigate to — it is NOT the database. Body content: product callout + status paragraph + "Wiki sections" heading + placeholder bullet list (will be filled with real page-mention links in step 9g). Parent: the user's chosen location.
+
+   **9b — Create the database inside the home page**
+   `parent.page_id = <home_page_id>`. The database is a child of the home page, visible in the sidebar under it.
+
+   **9c — Create views in this exact order (order determines default)**
+   1. **Home** — gallery, filtered to Tags contains "Top Level", card preview = page_cover. First = default.
+   2. **All Pages** — table, showing Page, Owner, Tags, Verification, Last edited time.
+
+   **9d — Create all top-level pages inside the database**
+   Parent = database ID. Order: Start Here → Overview → section landing pages → leaf pages. Every page gets a cover image, emoji icon, Verification = Empty, Owner, and Tags.
+
+   **9e — Create all sub-pages as children of their section pages**
+   Parent = section page ID (not the database). Do this after section pages exist and have IDs.
+
+   **9f — Insert real page-mention links into section pages and Start Here**
+   Now that sub-pages have IDs, update the section landing pages and Start Here with real Notion page-mention blocks — not plain text. A reader must be able to click every link. See page mention block format in `references/notion-structures.md`.
+
+   **9g — Insert real page-mention links into the home page**
+   Update the home page's "Wiki sections" bullet list with page-mention links to every top-level page now that they have IDs.
+
+10. **Confirm** — share the **home page URL** (not the database URL) with the user. State how many pages were created and flag any sections needing manual input.
 
 ### `update` — Refresh an existing wiki against the current codebase
 

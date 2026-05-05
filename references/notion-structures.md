@@ -4,48 +4,91 @@ This reference covers how to assemble the wiki parent page and its sub-pages via
 
 ---
 
-## Parent page shape
+## Home page shape
 
-Every wiki home page looks like this (top to bottom):
+The home page is a regular Notion page — NOT the database itself. It is the URL you share with users. The database lives inside it as a child (visible in the sidebar under the home page).
+
+Structure (top to bottom):
 
 1. **Cover image** — full-width banner relevant to the product
 2. **Emoji icon** — topical to the product
 3. **Title** — the product name
-4. **Callout block** — 💡 icon, default background, contains the product one-liner description (what it does and for whom, one or two sentences)
-5. **Status paragraph** — bold text, format: `🟢 Status: [present-tense description of live status]`. Use 🟢 for live/healthy, 🟡 for in-progress/degraded, 🔴 for down/deprecated. Source the status text from the user during the interview.
-6. **Inline database** — the gallery of sub-pages (created as a child of this page via `notion-create-database`)
+4. **Callout block** — 💡 icon, `gray_background`, product one-liner (what it does and for whom)
+5. **Status paragraph** — bold, `🟢 Status: [live status description]`. 🟢 live, 🟡 beta/in-progress, 🔴 down/deprecated.
+6. **Divider**
+7. **Heading 2** — "Wiki sections"
+8. **Paragraph** — "Jump to any section, or open the gallery to browse all pages."
+9. **Bulleted list** — one item per top-level wiki page, each a real Notion page-mention link (added in step 9g once page IDs exist — use a placeholder first pass if needed)
 
 ---
 
 ## Order of operations for `build`
 
-### Starter parent (skill creates the parent)
+**Step 1 — Create the home page**
 
-1. `notion-create-pages` — create the parent page with:
-   - `parent`: the user's chosen location (workspace or parent page ID)
-   - `title`: product name
-   - `icon`: topical emoji
-   - `cover`: relevant Notion gallery or Unsplash image
-   - `children`: callout block + status paragraph (see block shapes below)
+Always do this first, regardless of whether the user provided a parent location or not.
 
-2. `notion-create-database` — create the sub-page database:
-   - `parent`: `{ type: "page_id", page_id: <parent_page_id> }`
-   - `title`: `"Pages"`
-   - `properties`: standard schema (see below)
+```
+notion-create-pages:
+  parent: <user's chosen location — workspace or page ID>
+  title: <product name>
+  icon: <topical emoji>
+  cover: <relevant image>
+  children:
+    - callout block (💡, gray_background, product one-liner)
+    - status paragraph (bold, 🟢/🟡/🔴 Status: ...)
+    - divider
+    - heading_2: "Wiki sections"
+    - paragraph: "Jump to any section, or open the gallery to browse all pages."
+    - bulleted_list_item × N (placeholder text for now — real mentions added in step 7)
+```
 
-3. `notion-create-view` — set the gallery view:
-   - `database_id`: the newly created database ID
-   - `type`: `"gallery"`
-   - `name`: `"Gallery view"`
-   - `format.card_preview`: `"page_cover"`
+**Step 2 — Create the database inside the home page**
 
-4. `notion-create-pages` (one call per sub-page, or batched) — create each sub-page:
-   - `parent`: `{ type: "database_id", database_id: <database_id> }`
-   - Properties, icon, cover, body blocks per sub-page spec below
+```
+notion-create-database:
+  parent: { page_id: <home_page_id> }
+  title: <product name>
+  properties: <standard schema below>
+```
 
-### User-provided parent (user already has a parent page)
+**Step 3 — Create views (order matters — first view = default)**
 
-Do NOT touch the existing parent page content or properties. Start at step 2 above — create the database as a child of the user's page, set gallery view, then create sub-pages inside the database.
+Create the Home gallery view FIRST so it becomes the default:
+
+```
+View 1 (default): notion-create-view
+  name: "Home"
+  type: gallery
+  filter: Tags contains "Top Level"
+  card_preview: page_cover
+  display_properties: [Page]
+
+View 2: notion-create-view
+  name: "All Pages"
+  type: table
+  display_properties: [Page, Owner, Tags, Verification, Last edited time]
+```
+
+**Step 4 — Create all top-level pages inside the database**
+
+`parent.database_id = <database_id>`. Order: Start Here → Overview → Architecture → How To's → Integrations → Reference → Changelog → Decision Log → Strategy (if applicable). Every page gets cover image, emoji icon, Verification = Empty, Owner, Tags.
+
+**Step 5 — Create sub-pages as children of their section pages**
+
+`parent.page_id = <section_page_id>` (not the database). Do this after section pages exist.
+
+**Step 6 — Update section pages and Start Here with real page-mention links**
+
+Now that sub-pages have IDs, update (or append blocks to) section landing pages and the Start Here reading order list with real page-mention blocks. Plain text is not acceptable — use the page mention block format below.
+
+**Step 7 — Update home page navigation list with real page-mention links**
+
+Replace the placeholder bullet items in the home page "Wiki sections" list with real page-mention links to each top-level page.
+
+### User-provided parent
+
+If the user provides an existing Notion page as the parent location, use that page's ID as the parent for step 1 (the home page). Do NOT create the database directly inside the user's page — always create the home page first, then nest the database inside it.
 
 ---
 
