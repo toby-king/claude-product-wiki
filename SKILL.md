@@ -37,7 +37,14 @@ Pages must feel native to the existing Notion workspace, not stylistically disti
 - Use the existing properties schema: **Owner** (person), **Verification** (status), **Tags** (multi-select), **Last edited time**, **Created time**.
 - Use cover images on every page. The skill should suggest reasonable defaults from Notion's gallery (or Unsplash via Notion's picker) based on the page topic, but always allow the user to override.
 - Use emoji icons on every page. Pick something topical.
-- Use the existing tag vocabulary where it applies (Overview, How To, How We Work, SOP) plus a new "Technical" tag for the dev-docs pages and "Product" for product-layer pages.
+- Use the tag vocabulary below. Tags serve two purposes: filtering the Gallery Home view (Top Level) and grouping in the default gallery. Apply them accurately so navigation works.
+  - **Top Level** — every page that should appear on the Gallery Home view (Start Here, Overview, Architecture, How To's, Integrations, Reference, Changelog, Decision Log, Strategy). Sub-pages under section pages do NOT get this tag.
+  - **Overview** — the Overview page and Start Here page.
+  - **Product** — Overview, Changelog, Strategy.
+  - **Technical** — Architecture and its sub-pages, Integrations and its sub-pages, Reference and its sub-pages, How To's and its sub-pages.
+  - **How To** — How To's section page and all Getting Started, Running Locally, Deployment sub-pages.
+  - **SOP** — step-by-step workflow pages.
+  - **Reference** — Decision Log, Env Vars, API Endpoints, config pages.
 - Use callouts for definitions, warnings, and gotchas, not for general body content.
 - Use numbered lists for sequential steps (no toggles burying steps).
 - Use tables for structured reference data (env vars, integrations, routes).
@@ -57,32 +64,51 @@ These pauses are the user-control mechanism that makes Notion-direct safe. Never
 2. **After structure proposal, before interview** — "here's the page layout I'm proposing, any changes?"
 3. **After interview, before writing to Notion** — "here's everything I have, ready to create the drafts?"
 
-## The three-layer wiki structure
+## The wiki structure
 
-Every product wiki follows this shape, with categories pruned to what's relevant:
+Every product wiki follows this shape. The critical principle — learned from the best wikis in the wild — is that **section pages must be rich landing pages, not empty containers**. A reader who clicks "Architecture" should immediately understand what the section covers and see links to everything inside it. They should never land on a blank page and have to guess.
 
-**Product layer** (small, narrative, for both technical and non-technical readers)
-- Overview — what it is, who it's for, current status, owner
-- Strategy — positioning, target customer, why this exists (only if there's substantive content; skip if not)
-- Changelog — reverse-chronological log of meaningful changes
+### Top-level pages (tagged "Top Level" — appear on the Gallery Home view)
 
-**Product Reference layer** (artefacts, mostly stable)
-- Decision Log — chronological record of meaningful product/technical decisions, formatted as FAQ-style entries
+| Page | Emoji | Type | Purpose |
+|------|-------|------|---------|
+| **Start Here** | 👋 | Rich landing | Mandatory entry point. Reading order, key facts, FAQ toggles. Always created. |
+| **Overview** | 📋 | Rich landing | What it is, who it's for, status, quick-reference table, "where to go next" links |
+| **Architecture** | 🏗️ | Section landing | Describes the system shape → links to System Overview, Data Model, Key Workflows |
+| **How To's** | 🤷 | Section landing | Guides for common tasks → links to Getting Started, Running Locally, Deployment |
+| **Integrations** | 🔌 | Section landing | External services → links to one page per integration (skip if none) |
+| **Reference** | 📖 | Section landing | Lookup material → links to Env Vars, API Endpoints, config pages (skip if none) |
+| **Changelog** | 📝 | Leaf page | Reverse-chronological log of meaningful shipped changes |
+| **Decision Log** | 🗂️ | Leaf page | Chronological record of product and technical decisions |
+| **Strategy** | 🗺️ | Leaf page | Positioning, roadmap, why this exists (only create if there's real content) |
 
-(Diagrams, worksheets, roadmap deliberately deferred until there's content to fill them.)
+### Sub-pages (nested under section landing pages, NOT tagged "Top Level")
 
-**Technical layer** (the dev-docs spine)
-- Getting Started — clone, install, run locally happy path
-- Architecture/
-  - System Overview — high-level diagram + components
-  - Data Model — key entities and relationships
-  - Key Workflows — one page per major workflow, written in numbered SOP style
-- Operations/
-  - Running Locally — concrete copy-pasteable steps
-  - Environment Variables — full table
-  - Deployment — where it lives, how it gets there
-- Integrations/ — one page per major external service, only if there are integrations
-- Reference/ — API endpoints, schema, configuration, only if needed
+Sub-pages live *inside* their section page. They appear as embedded page links in the section landing page and as sidebar children in Notion. They don't appear on the Gallery Home view. Prune any sub-pages that don't apply to the specific product.
+
+| Under Architecture | Under How To's | Under Integrations | Under Reference |
+|--------------------|----------------|--------------------|-----------------|
+| System Overview | Getting Started | One page per service | Environment Variables |
+| Data Model | Running Locally | | API Endpoints |
+| Key Workflows/ | Deployment | | (config, schema, etc.) |
+| └─ [one per major workflow] | | | |
+
+## Section landing page pattern
+
+This pattern must be followed for every section page (Architecture, How To's, Integrations, Reference) and for the Overview and Start Here pages. It is what makes the wiki navigable to someone who has never seen the product before.
+
+**Section pages (Architecture, How To's, Integrations, Reference):**
+1. **Grey callout** (`ℹ️` icon, `gray_background`) — a single sentence explaining what this section is. No jargon.
+   - Example: *"This section documents how the system is built: its services, data model, and key workflows."*
+2. **Purpose paragraph** — 2–3 sentences on what the section provides clarity over and why it matters.
+3. **Bullet list** — 3–5 bullets, each one a specific thing a reader will find here.
+4. **Sub-page links** — embedded Notion page links (one per sub-page), grouped under a `## Heading` if there are multiple logical groups. Each group gets a brief description before the links.
+
+Never leave a section page empty. Even if there's only one sub-page inside it, the section page should explain the section and link to that sub-page.
+
+**Start Here page** — see `templates/start-here-page.md`. It follows a different but equally specific pattern.
+
+**Overview page** — see `templates/overview-page.md`. It ends with a "Where to go next" section that links to the 3–4 most important deeper pages with one-liners.
 
 ## The commands
 
@@ -92,35 +118,31 @@ The skill exposes six commands. Identify which one applies from the user's reque
 
 This is the main entry point. Use when the user wants to document a product that has no existing wiki.
 
-**The wiki is always a Notion database, never plain nested pages.** This is a hard requirement — databases support gallery and table views, filtering by tags, and proper property schemas. Create the wiki using `notion-create-database` under the specified parent page, then create all wiki pages as database entries inside it.
-
-**Parent page modes**: at the orient step, ask whether the user has an existing Notion page they want to use as the parent, or whether the skill should create a starter parent page. The recommended workflow is for users to design the parent page themselves once they have a baseline to react to, so on the first run the skill creates a starter parent; on subsequent runs (or once the user has a manual parent page) the skill should accept the existing parent and only create sub-pages underneath. See `notion-structures.md` for both modes.
+**Parent page modes**: at the orient step, ask whether the user has an existing Notion page they want to use as the parent, or whether the skill should create a starter parent page. The recommended workflow is for users to design the parent page themselves once they have a baseline to react to, so on the first run the skill creates a starter parent; on subsequent runs (or once the user has a manual parent page) the skill should accept the existing parent and only create sub-pages underneath. See `references/notion-structures.md` for both modes.
 
 Workflow:
 1. **Orient** — confirm:
    - The project (repo path)
    - The product name
    - **Parent page mode**: ask "Do you have an existing Notion page you want to use as the wiki parent, or should I create a starter parent page that you can redesign later?" If existing, get the page URL or ID. If new, get the parent location (which company sub-tree, etc.).
-2. **Scan** — analyse the codebase per `scan-checklist.md`. Produce a scan report summarising tech stack, dependencies, integrations, env vars, routes, schema, scripts, deployment hints. Show this to the user.
+2. **Scan** — analyse the codebase per `references/scan-checklist.md`. Produce a scan report summarising tech stack, dependencies, integrations, env vars, routes, schema, scripts, deployment hints. Show this to the user.
 3. **Pause 1** — "here's what I found, anything missing?" Wait for input.
 4. **Propose structure** — based on scan, propose the page tree. Include only categories that make sense for this product. Show the user.
 5. **Pause 2** — "here's the structure, any changes?" Wait for input.
 6. **Draft verifiable sections** — write the content for pages that can be sourced from code (Tech Stack, Env Vars, Integration pages, Reference pages). Mark sections as `[code-verified]` internally.
-7. **Interview** — for each page that needs user input, ask targeted questions per `question-bank.md`. Batch questions (3-7 at a time). Save progress between batches in case the user steps away.
+7. **Interview** — for each page that needs user input, ask targeted questions per `references/question-bank.md`. Batch questions (3-7 at a time). Save progress between batches in case the user steps away.
 8. **Pause 3** — show full structure with all content filled in. "Ready to create these in Notion as drafts?"
-9. **Write to Notion** — follow the sequence below. Do not proceed to the next step until the current one succeeds.
-   1. **Create the database** under the parent using `notion-create-database`. Schema must include: Name (title), Owner (person), Verification (status), Tags (multi-select). Give the database an emoji icon and cover image.
-   2. **Create all first-level section pages** as database entries (using `data_source_id` from the fetch result). The standard set is: Overview, Getting Started, Architecture, Operations, Integrations (if applicable), Reference (if applicable), Changelog, Decision Log. Tag each with `"Top Level"` in addition to their content tags — this is what the gallery view filter uses.
-   3. **Create sub-pages** under each section page using `page_id` parent (not data_source_id — sub-pages are plain pages, not database entries). Key sub-pages:
-      - Under Architecture: System Overview, Data Model, Key Workflows
-      - Under Key Workflows: one page per major workflow (e.g. Candidate Hiring Flow, Role Creation, etc.) — do NOT leave Key Workflows as a leaf page with no children
-      - Under Operations: Running Locally, Environment Variables, Deployment
-      - Under each Integrations section page: one sub-page per external service
-   4. **Create views** on the database after all pages exist:
-      - `notion-create-view` type `gallery`, name `"Home"`, configure `FILTER "Tags" = "Top Level"` — this is the landing view showing only section pages
-      - `notion-create-view` type `table`, name `"All Pages"` — shows everything
-   5. Set properties on all pages: Verification = Empty, Owner = user, Tags = appropriate values, cover image, emoji icon.
-10. **Confirm** — tell the user where the drafts live, how many pages were created, what's in any open-questions sections, and (if a starter parent was created) explicitly invite them to redesign it manually. Note: `notion-delete-page` is not available via MCP — if there's an old plain-page hierarchy to remove, tell the user to archive it manually in Notion.
+9. **Write to Notion** — follow the spec in `references/notion-structures.md` exactly. The parent page contains a callout (product one-liner) and a status paragraph, then an inline database displayed in gallery view — every sub-page is a database entry, not a loose child page. Key rules:
+   - **Starter parent**: create the page with the callout and status paragraph as body blocks, then create the database as a child of it.
+   - **User-provided parent**: do NOT modify its existing content; just create the database as a child of it.
+   - Create each top-level page inside the database (parent = database ID), so it appears as a gallery card.
+   - Apply cover image and emoji icon to every page — these render as gallery card thumbnails.
+   - Set Verification = Empty, Owner, and Tags on every database entry.
+   - **Start Here** is always the first page created. Use the template in `templates/start-here-page.md`.
+   - **Section landing pages** (Architecture, How To's, Integrations, Reference) must be created with rich body content per the section landing page pattern above and the template in `templates/section-page.md`. Never create them as blank pages.
+   - **Sub-pages** are children of their section page (not direct database children). Create them after their parent section page exists.
+   - **Overview** ends with a "Where to go next" section linking to the 3–4 most important pages.
+10. **Confirm** — tell the user where the drafts live, how many pages were created, what's in any open-questions sections, and (if a starter parent was created) explicitly invite them to redesign it manually.
 
 ### `update` — Refresh an existing wiki against the current codebase
 
@@ -129,7 +151,7 @@ Use when an existing wiki may have drifted from the code.
 Workflow:
 1. **Locate** — find the existing wiki in Notion (ask user for parent page if not given).
 2. **Read existing wiki** — fetch all pages and their content.
-3. **Scan codebase** — same as build (per `scan-checklist.md`).
+3. **Scan codebase** — same as build.
 4. **Diff** — identify:
    - **Stale**: claims in the wiki the code contradicts
    - **Missing**: things in the code not yet in the wiki (new integrations, new env vars, new routes)
@@ -185,7 +207,7 @@ If the changelog has 50+ entries, suggest archiving older ones to a child page.
 Use when the user wants to understand what's in a codebase before deciding what to do, or wants to see what the skill would extract without committing to a build.
 
 Workflow:
-1. **Run the codebase scan** per `scan-checklist.md`.
+1. **Run the codebase scan** per `references/scan-checklist.md`.
 2. **Produce scan report**. Show the user.
 3. **Stop.** No structure proposal, no interview, no Notion writes.
 
@@ -194,38 +216,46 @@ Workflow:
 The skill uses the Notion MCP to read and write pages. Key operations:
 
 - **Find parent page** — search for the product/company parent page where the wiki should live
-- **Create page** — with title, icon (emoji), cover, properties, and body blocks
+- **Create database** — `notion-create-database` creates an inline database on a parent page with the standard properties schema (Name/title, Owner/people, Verification/status, Tags/multi-select, Created time, Last edited time). Sub-pages live inside this database.
+- **Set gallery view** — `notion-create-view` on the database with type = gallery and card_preview = page_cover. This is how the gallery card layout is established.
+- **Create page** — with title, icon (emoji), cover, properties, and body blocks. When creating sub-pages, parent must be the database ID (not the parent page ID), so they appear as gallery entries.
 - **Update page** — modify properties or body blocks
 - **Append blocks** — add to an existing page (used heavily for changelog and decision log)
-- **Create relations** — link pages to each other and to the company database
 
-When creating pages, always:
+When creating sub-pages, always:
+- Set parent to the database ID (not the wiki parent page)
 - Set Verification to Empty (drafts)
 - Set Owner to the user (or ask if uncertain)
 - Apply Tags appropriately ("Technical" for dev-docs pages, "Product" for product layer, "Overview" for overview pages, etc.)
-- Add cover image and emoji icon
-- Link to the parent page via relation if a relations property exists
+- Add cover image and emoji icon — these render as gallery card thumbnails
 
 For complex pages with many block types (callouts, tables, headings, code blocks), build the block structure programmatically and submit in batches to avoid Notion API limits.
 
 ## Page composition
 
-For each page type, follow the structure in the corresponding template file at the skill root:
+For each page type, follow the structure in `templates/`:
 
-- `overview-page.md` — Product layer overview page
-- `strategy-page.md` — Strategy page (use sparingly)
-- `changelog-page.md` — Changelog page structure
-- `decision-log-page.md` — Decision log page structure
-- `decision-log-entry.md` — Format for individual decision entries
-- `getting-started-page.md` — Getting Started page
-- `architecture-overview-page.md` — Architecture system overview
-- `data-model-page.md` — Data model page
-- `workflow-page.md` — Key workflow page (uses SOP-style numbered structure)
-- `running-locally-page.md` — Running Locally page
-- `env-vars-page.md` — Environment Variables page
-- `deployment-page.md` — Deployment page
-- `integration-page.md` — Per-integration page
-- `reference-page.md` — Generic reference page (API, schema)
+**Navigation / orientation pages (always load these):**
+- `templates/start-here-page.md` — The mandatory entry point. Reading order, quick-reference table, FAQ toggles.
+- `templates/section-page.md` — The section landing page pattern for Architecture, How To's, Integrations, Reference.
+- `templates/overview-page.md` — Product overview with "Where to go next" links at the bottom.
+
+**Technical pages:**
+- `templates/getting-started-page.md` — Getting Started page
+- `templates/architecture-overview-page.md` — System Overview (sub-page under Architecture)
+- `templates/data-model-page.md` — Data model page (sub-page under Architecture)
+- `templates/workflow-page.md` — Key workflow page, SOP-style numbered structure (sub-page under Architecture/Key Workflows)
+- `templates/running-locally-page.md` — Running Locally (sub-page under How To's)
+- `templates/env-vars-page.md` — Environment Variables page (sub-page under Reference)
+- `templates/deployment-page.md` — Deployment page (sub-page under How To's)
+- `templates/integration-page.md` — Per-integration page (sub-page under Integrations)
+- `templates/reference-page.md` — Generic reference page (API, schema) (sub-page under Reference)
+
+**Product / governance pages:**
+- `templates/strategy-page.md` — Strategy page (use sparingly, only if real content exists)
+- `templates/changelog-page.md` — Changelog page structure
+- `templates/decision-log-page.md` — Decision log page structure
+- `templates/decision-log-entry.md` — Format for individual decision entries
 
 Each template specifies the section structure, the appropriate Notion blocks, and where content comes from (code-verified vs user-stated).
 
@@ -260,7 +290,7 @@ The user may run this skill in background time while doing other work. Adapt:
 
 For details on specific aspects of the workflow, load the relevant reference:
 
-- `scan-checklist.md` — Detailed codebase scanning checklist (load when running `scan`, `build`, or `update`)
-- `question-bank.md` — Question patterns organised by page type (load before interview phase)
-- `notion-structures.md` — How to translate content into Notion block structures, including how to build properties, tables, callouts, toggles, and relations via MCP (load when writing to Notion)
-- Page templates (all at skill root): `overview-page.md`, `getting-started-page.md`, `architecture-overview-page.md`, `data-model-page.md`, `workflow-page.md`, `running-locally-page.md`, `env-vars-page.md`, `deployment-page.md`, `integration-page.md`, `reference-page.md`, `changelog-page.md`, `decision-log-page.md`, `decision-log-entry.md`, `strategy-page.md`
+- `references/scan-checklist.md` — Detailed codebase scanning checklist (load when running `scan`, `build`, or `update`)
+- `references/question-bank.md` — Question patterns organised by page type (load before interview phase)
+- `references/notion-structures.md` — How to translate content into Notion block structures, including how to build properties, tables, callouts, toggles, and relations via MCP (load when writing to Notion)
+- `templates/` — Page-specific templates (load the relevant one when composing a page)
