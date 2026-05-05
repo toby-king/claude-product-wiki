@@ -81,11 +81,13 @@ A bulleted list of significant things the product does NOT yet do. Include only 
 
 `## Where to go next`
 
-A short numbered list of 3–4 links — the most important pages for a reader who wants to go deeper after reading the Overview. Each link is a page mention followed by an em dash and a one-liner.
+A short numbered list of 3–4 links — the most important pages for a reader who wants to go deeper after reading the Overview. Each link is a real markdown link followed by an em dash and a one-liner.
 
-> 1. @System Overview — see how the services are structured and how they communicate
-> 2. @Getting Started — get a local dev environment running
-> 3. @[Key Workflow] — understand [the most important user journey]
-> 4. @Decision Log — see the key choices made during development
+> 1. [System Overview](https://notion.so/<page-id>) — see how the services are structured and how they communicate
+> 2. [Getting Started](https://notion.so/<page-id>) — get a local dev environment running
+> 3. [Key Workflow](https://notion.so/<page-id>) — understand [the most important user journey]
+> 4. [Decision Log](https://notion.so/<page-id>) — see the key choices made during development
+
+**Important**: this section is written with placeholder text when the Overview is first created (step 9d), because sub-pages don't exist yet. In step 9f, once all sub-pages have been created and have IDs, come back and update this section with real markdown links using the actual page URLs. Plain text or bold text is not acceptable — the reader must be able to click every link.
 
 Choose the 3–4 pages that give the most value in sequence. Do not just list every page — be selective.

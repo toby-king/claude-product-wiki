@@ -43,11 +43,13 @@ notion-create-pages:
     - bulleted_list_item × N (placeholder text for now — real mentions added in step 7)
 ```
 
-**Step 2 — Create the database inside the home page**
+**Step 2 — Create the database at the same level as the home page**
+
+The database must be created under the **same parent as the home page** — NOT inside the home page. If you nest the database inside the home page, it appears as a closed database block in the page body AND the inline gallery also appears, causing a confusing duplicate. Keep them as siblings.
 
 ```
 notion-create-database:
-  parent: { page_id: <home_page_id> }
+  parent: { page_id: <user_chosen_parent_id> }   ← same parent as the home page
   title: <product name>
   properties: <standard schema below>
 ```
@@ -69,6 +71,22 @@ View 2: notion-create-view
   type: table
   display_properties: [Page, Owner, Tags, Verification, Last edited time]
 ```
+
+**Step 3b — Embed the gallery inline on the home page**
+
+After creating the views, embed the gallery directly in the home page body. This is what the user sees when they land on the home page.
+
+```
+notion-create-view:
+  parent_page_id: <home_page_id>
+  data_source_id: <database_id>
+  name: "Home"
+  type: gallery
+  filter: Tags contains "Top Level"
+  card_preview: page_cover
+```
+
+This creates a single inline gallery block on the home page. Because the database is a sibling (not a child), there is no duplicate database block in the body.
 
 **Step 4 — Create all top-level pages inside the database**
 
@@ -239,6 +257,8 @@ The Start Here page must be created with this exact structure. It is the entry p
 ---
 
 ## Block shapes
+
+> **Callout format warning**: Never use GitHub-style admonitions (`[!NOTE]`, `[!WARNING]`, `[!TIP]`) in Notion content. Notion does not render these as callouts — they appear as literal blockquote text with the `[!WARNING]` string visible to readers. Use only the JSON callout block format below, or a plain blockquote `> emoji content` for simple cases.
 
 ### Callout block
 

@@ -137,12 +137,17 @@ Workflow:
    **9a — Create the home page (always, no exceptions)**
    Create a regular Notion page as the wiki's landing page. This is what users navigate to — it is NOT the database. Body content: product callout + status paragraph + "Wiki sections" heading + placeholder bullet list (will be filled with real page-mention links in step 9g). Parent: the user's chosen location.
 
-   **9b — Create the database inside the home page**
-   `parent.page_id = <home_page_id>`. The database is a child of the home page, visible in the sidebar under it.
+   **9b — Create the database at the same level as the home page**
+   `parent.page_id = <user_chosen_parent_id>` — the same parent the home page lives in, NOT inside the home page. If you nest the database inside the home page, it appears as a closed database block in the page body AND the inline gallery also appears, giving a confusing duplicate. Keep them as siblings.
 
    **9c — Create views in this exact order (order determines default)**
    1. **Home** — gallery, filtered to Tags contains "Top Level", card preview = page_cover. First = default.
    2. **All Pages** — table, showing Page, Owner, Tags, Verification, Last edited time.
+
+   Then embed the gallery directly on the home page body:
+   - Call `notion-create-view` with `parent_page_id = <home_page_id>` and `data_source_id = <database_id>`
+   - type = gallery, filter = Tags contains "Top Level", card_preview = page_cover
+   This creates a single inline gallery block on the home page. No separate database block, no duplicate.
 
    **9d — Create all top-level pages inside the database**
    Parent = database ID. Order: Start Here → Overview → section landing pages → leaf pages. Every page gets a cover image, emoji icon, Verification = Empty, Owner, and Tags.
@@ -150,8 +155,12 @@ Workflow:
    **9e — Create all sub-pages as children of their section pages**
    Parent = section page ID (not the database). Do this after section pages exist and have IDs.
 
-   **9f — Insert real page-mention links into section pages and Start Here**
-   Now that sub-pages have IDs, update the section landing pages and Start Here with real Notion page-mention blocks — not plain text. A reader must be able to click every link. See page mention block format in `references/notion-structures.md`.
+   **9f — Insert real page-mention links into section pages, Start Here, and Overview**
+   Now that sub-pages have IDs, update:
+   - Section landing pages — replace placeholder sub-page bullets with real page-mention links
+   - Start Here reading order list — replace any placeholder items with real page-mention links
+   - Overview "Where to go next" — replace placeholder text with real markdown links (e.g. `[System Overview](https://notion.so/...)`) pointing to the actual sub-pages and top-level pages
+   A reader must be able to click every link. See page mention block format in `references/notion-structures.md`.
 
    **9g — Insert real page-mention links into the home page**
    Update the home page's "Wiki sections" bullet list with page-mention links to every top-level page now that they have IDs.
@@ -228,6 +237,9 @@ Workflow:
 ## Working with Notion via MCP
 
 The skill uses the Notion MCP to read and write pages. Key operations:
+
+> **Callout format warning**: Never use GitHub-style admonitions (`[!NOTE]`, `[!WARNING]`, `[!TIP]`) in Notion content. Notion does not render these as callouts — they appear as literal blockquote text with `[!WARNING]` visible to readers. Use only proper Notion callout block syntax (see `references/notion-structures.md`) or a plain blockquote `> emoji content`.
+
 
 - **Find parent page** — search for the product/company parent page where the wiki should live
 - **Create database** — `notion-create-database` creates an inline database on a parent page with the standard properties schema (Name/title, Owner/people, Verification/status, Tags/multi-select, Created time, Last edited time). Sub-pages live inside this database.
