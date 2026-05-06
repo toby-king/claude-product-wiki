@@ -52,7 +52,7 @@ Icon: `ℹ️`, colour: `gray_background`.
 Good:
 - How the frontend, backend, and database relate to each other
 - The schema for the five core database tables
-- Step-by-step breakdown of the video interview flow
+- Step-by-step breakdown of every user-facing workflow
 
 Bad:
 - Technical documentation
@@ -110,9 +110,11 @@ These pages cover how the system is organised and what each part does.
 
 ## Workflows
 
-Each page walks through one major product flow end to end.
+Each page walks through one complete user-facing flow — trigger, steps, outcome, and failure modes.
 
-@Key Workflows
+@[Workflow A]
+@[Workflow B]
+@[Workflow C]
 ```
 
 ---

@@ -36,7 +36,11 @@ A short paragraph or bulleted list explaining what causes this workflow to run:
 - Webhook from external service
 - Status change in another system
 
-### 4. Numbered steps
+### 4. Who can do this
+
+Which user roles or permission levels can trigger this workflow. If access is unrestricted, say so explicitly ("Any authenticated user"). If role information isn't available from code or user input, mark as `<!-- TODO: confirm permissions -->`.
+
+### 5. Numbered steps
 
 Top-level steps numbered 1, 2, 3. Sub-steps as 1.1, 1.2 (using Notion's nested numbered lists).
 
@@ -78,18 +82,22 @@ Example:
    If any step above fails, the failure is logged to the sync table with the error and a Slack notification fires to `#ops-alerts`.
 ```
 
-### 5. Outcome
+### 6. Outcome
 
 A short section stating what the user/system sees when the workflow completes successfully.
 
-### 6. Failure modes
+### 7. What the user sees
+
+Brief note on the UI context at the start and end of this workflow: what screen or state the user begins from, and what confirmation or result they see when it completes. Skip this section for purely backend or automated workflows that have no user-visible output.
+
+### 8. Failure modes
 
 Bulleted list of known things that can go wrong, with the recovery action:
 - **Signature validation fails**: webhook rejected, no retry — usually means the secret is misconfigured
 - **Indeed login fails**: Playwright captures screenshot to `tmp/`, alert fires
 - **Token refresh fails**: workflow fails fast — usually means the refresh token has been revoked
 
-### 7. Related pages (optional)
+### 9. Related pages (optional)
 
 Page mentions to:
 - Integration pages for services involved (e.g. Zoho integration, Indeed integration)

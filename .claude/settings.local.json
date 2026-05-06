@@ -5,7 +5,8 @@
       "mcp__244fb9b7-1bdf-4224-ae95-cd947917c2bb__notion-search",
       "mcp__244fb9b7-1bdf-4224-ae95-cd947917c2bb__notion-create-view",
       "Bash(git add *)",
-      "Bash(git commit -m ' *)"
+      "Bash(git commit -m ' *)",
+      "PowerShell(New-Item -ItemType Directory -Path \"$env:USERPROFILE\\\\.claude\\\\commands\" -Force)"
     ]
   }
 }

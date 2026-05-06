@@ -81,17 +81,48 @@ Good questions:
 
 ## Architecture > Key Workflows
 
-Usually the most user-input-heavy section. Each workflow becomes its own page using SOP-style numbered structure.
+The most user-input-heavy section. Every user-facing workflow gets its own page. The goal is exhaustiveness — document everything the product can do, not just the highlights.
 
-Good questions per workflow:
-- "What are the 3-5 main things this product actually does end-to-end? I'll make a page for each."
-- For each named workflow:
-  - "Walk me through {workflow} step by step. Start from the trigger, end with the outcome."
-  - "Anything non-obvious — retries, side effects, edge cases?"
-  - "What happens when it fails?"
-  - "Are there variations or branches in the flow?"
+This is a two-phase process. **Do not skip Phase A or start Phase B early.**
+
+### Phase A — Confirm the complete workflow list
+
+Open with the Workflow Candidates table from the scan and ask in one message:
+
+> "Before we go deep on any workflow, I want to make sure we've got the complete list. Here's what I found in the code:
+>
+> [paste candidate table from scan]
+>
+> A few questions:
+> 1. Are any of these the same workflow that should be merged?
+> 2. Are any NOT user-facing — internal maintenance scripts or infrastructure jobs I shouldn't document as workflows?
+> 3. What would you actually call each one? I've used code-inferred names — replace with the real names.
+> 4. Anything completely missing? Workflows that don't show up as a route or script — like a manual admin process, an email-triggered flow, a CSV import, or anything a user can do that the code signals didn't surface?"
+
+Wait for the user's response. Update the candidate list based on their answers. This confirmed, named list becomes the canonical workflow index — every item on it gets a page.
+
+If the scan produced no candidates (no routes, no scripts, no jobs), ask directly: "Walk me through everything a user can do in this product. I'll create a page for each distinct flow."
+
+### Phase B — Deep-dive each workflow
+
+Only start Phase B once the list is confirmed. Work through all workflows, batching 2-3 per message:
+
+For each workflow:
+- "Walk me through [workflow name] step by step. Start from the trigger, end at the outcome — what does the user see, what does the system do?"
+- "Who can do this? Any role or permission restrictions?"
+- "What can go wrong, and what happens when it does?"
+- "Any variations, branches, or edge cases worth capturing?"
+- "Any related workflows that feed into or out of this one?"
 
 The "walk me through the last time you actually did this" technique is essential — it produces concrete narrative rather than idealised description.
+
+### Verification close
+
+After all workflows are documented, always ask:
+
+> "That's [N] workflows. Before I write anything, is there anything a user of this system can do that we haven't covered?"
+
+Never assume the interview was exhaustive without asking this explicitly.
 
 ## Operations > Running Locally
 

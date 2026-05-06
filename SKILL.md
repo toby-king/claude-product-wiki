@@ -126,12 +126,22 @@ Workflow:
    - The project (repo path)
    - The product name
    - **Parent page mode**: ask "Do you have an existing Notion page you want to use as the wiki parent, or should I create a starter parent page that you can redesign later?" If existing, get the page URL or ID. If new, get the parent location (which company sub-tree, etc.).
-2. **Scan** — analyse the codebase per `references/scan-checklist.md`. Produce a scan report summarising tech stack, dependencies, integrations, env vars, routes, schema, scripts, deployment hints. Show this to the user.
-3. **Pause 1** — "here's what I found, anything missing?" Wait for input.
-4. **Propose structure** — based on scan, propose the page tree. Include only categories that make sense for this product. Show the user.
+2. **Scan** — analyse the codebase per `references/scan-checklist.md`. Produce a scan report summarising tech stack, dependencies, integrations, env vars, routes, schema, scripts, deployment hints. Always include the **Workflow Candidates** section (derived from route groupings, scripts, scheduled jobs, and webhook handlers) at the end of the scan report. Show this to the user.
+3. **Pause 1** — "here's what I found, anything missing?" The workflow candidates table is part of this pause — ask the user to confirm, rename, and complete the list. This is the first step toward an exhaustive workflow index. Wait for input.
+4. **Propose structure** — based on scan and Pause 1 workflow confirmation, propose the page tree. The Architecture section should list individual workflow page titles by name (confirmed by the user in Pause 1), not a generic placeholder. Example:
+   ```
+   Architecture/
+     ├── System Overview
+     ├── Data Model
+     └── Key Workflows/
+          ├── [Confirmed Workflow A name]
+          ├── [Confirmed Workflow B name]
+          └── [Confirmed Workflow C name]
+   ```
+   Include only categories that make sense for this product. Show the user.
 5. **Pause 2** — "here's the structure, any changes?" Wait for input.
 6. **Draft verifiable sections** — write the content for pages that can be sourced from code (Tech Stack, Env Vars, Integration pages, Reference pages). Mark sections as `[code-verified]` internally.
-7. **Interview** — for each page that needs user input, ask targeted questions per `references/question-bank.md`. Batch questions (3-7 at a time). Save progress between batches in case the user steps away.
+7. **Interview** — start with workflow enumeration (Phase A from `references/question-bank.md`) before any other section. The confirmed workflow list from Pause 1 is the starting point — Phase A finalises it and Phase B goes deep on each workflow. Do not begin Phase B until the user has confirmed the workflow list is complete. Then cover remaining sections per `references/question-bank.md`. Batch questions (3-7 at a time). Save progress between batches in case the user steps away.
 8. **Pause 3** — show full structure with all content filled in. "Ready to create these in Notion as drafts?"
 9. **Write to Notion** — follow `references/notion-structures.md` exactly. The creation order below is mandatory — each step depends on the previous one having IDs to reference.
 
@@ -301,6 +311,11 @@ Before submitting any pages to Notion, verify:
 - [ ] Every env var mentioned is actually referenced in code
 - [ ] Every integration mentioned has a real SDK import or API call
 - [ ] No costs, pricing tiers, or usage figures on the Costs page were invented — every figure came from the user
+- [ ] Every API route group is accounted for in a workflow page or explicitly marked as internal-only
+- [ ] Every webhook handler is assigned to a workflow
+- [ ] Every scheduled job / cron is explained as part of a workflow or flagged as infrastructure
+- [ ] Every CLI script is classified as user-facing workflow or internal tooling
+- [ ] User explicitly confirmed the workflow list is complete (verification close asked)
 - [ ] Every route mentioned is really registered
 - [ ] Every "we decided X" or "the team does Y" came from the user
 - [ ] No invented version numbers, dates, team sizes, or metrics

@@ -112,6 +112,58 @@ Frameworks:
 - FastAPI: `@app.get`, `@app.post` decorators
 - Flask: `@app.route` decorators
 
+## Workflow candidate detection
+
+Run this after extracting routes, scripts, and jobs. Produces the **Workflow Candidates** table that anchors the workflow interview. Never invent names or purposes — derive only from code signals.
+
+### Step 1 — Group API routes by domain prefix
+
+Group routes by their URL namespace. Each namespace is a candidate workflow area:
+
+- `/api/jobs/*` (8 routes) → "Job management" candidate
+- `/api/applicants/*`, `/api/pipeline/*` → "Applicant pipeline" candidate
+- `/api/interviews/*` → "Interview flow" candidate
+- Routes that don't fit a clear group → flag as "Unclassified routes" for user to place
+
+Use handler file names as a secondary grouping signal where URL prefixes are ambiguous.
+
+### Step 2 — Identify non-route entry points
+
+Each of these is a potential workflow trigger that wouldn't appear in the route list:
+
+| Signal | What to look for |
+|---|---|
+| Webhook handlers | Routes named `webhook`, `callback`, `notify`, or paths like `/zoho/webhook`, `/stripe/webhook` |
+| Scheduled jobs / cron | `cron(`, `schedule(`, Bull/BullMQ queue definitions, `setInterval` on long intervals, GitHub Actions `schedule:` triggers, Railway/Render cron config, `node-cron` |
+| CLI commands | All scripts in `package.json`, `Makefile`, `justfile`, `bin/`, `scripts/` — flag user-initiated vs. internal tooling based on name |
+| Background job processors | Files named `*worker*`, `*processor*`, `*consumer*`, `*job*`; queue listener registrations |
+
+### Step 3 — Produce the Workflow Candidates table
+
+Append this to the scan report shown at Pause 1:
+
+```
+## Workflow candidates (from code)
+
+| # | Candidate name (inferred) | Signal | Entry points |
+|---|--------------------------|--------|--------------|
+| 1 | Job management | Routes: GET/POST/PATCH /api/jobs/* (8 routes) | jobs.ts |
+| 2 | Applicant pipeline | Routes: /api/applicants/*, /api/pipeline/* | applicants.ts, pipeline.ts |
+| 3 | Video interview flow | Routes: /api/interviews/* + webhook handler | interviews.ts, zoho-webhook.ts |
+| 4 | Zoho sync | Cron job, runs every 15 min | zoho-sync.ts |
+| 5 | Indeed publishing | Script: scripts/publish-indeed.ts | publish-indeed.ts |
+
+⚠️ These are inferred groupings from route prefixes, file names, and job definitions.
+The code shows what exists — not what it means. Confirm, rename, and complete this
+list in the interview before any workflow pages are created.
+```
+
+Rules:
+- Candidate names must come from route prefixes, file names, or script names — never invented
+- Show the code signal (route count, file name, job trigger) so the user can verify the inference
+- A product with no routes, scripts, or jobs gets no candidates table — note this explicitly
+- Ungroupable routes appear as a row: "Unclassified routes — {list}" for the user to assign
+
 ## Frontend routing (if applicable)
 
 - Route definitions (React Router, Next.js, SvelteKit)
