@@ -11,7 +11,7 @@ High-level shape of the system. The page that lets a new contributor build a men
 
 ## Icon and cover
 
-- **Icon**: 🏗️
+- **Icon**: 🌐
 - **Cover**: architectural / structural-themed gallery image
 
 ## Body structure

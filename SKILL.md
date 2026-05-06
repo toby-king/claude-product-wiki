@@ -43,8 +43,9 @@ Pages must feel native to the existing Notion workspace, not stylistically disti
   - **Product** — Overview, Changelog, Strategy.
   - **Technical** — Architecture and its sub-pages, Integrations and its sub-pages, Reference and its sub-pages, How To's and its sub-pages.
   - **How To** — How To's section page and all Getting Started, Running Locally, Deployment sub-pages.
-  - **SOP** — step-by-step workflow pages.
-  - **Reference** — Decision Log, Env Vars, API Endpoints, config pages.
+  - **SOP** — formal standard operating procedure pages.
+  - **How We Work** — workflow pages that document internal processes end-to-end (Key Workflow sub-pages). Similar to SOP but for product/engineering flows rather than formal procedures.
+  - **Reference** — Decision Log, Env Vars, API Endpoints, config pages, Costs.
 - Use callouts for definitions, warnings, and gotchas, not for general body content.
 - Use numbered lists for sequential steps (no toggles burying steps).
 - Use tables for structured reference data (env vars, integrations, routes).
@@ -79,7 +80,7 @@ Every product wiki follows this shape. The critical principle — learned from t
 | **Integrations** | 🔌 | Section landing | External services → links to one page per integration (skip if none) |
 | **Reference** | 📖 | Section landing | Lookup material → links to Env Vars, API Endpoints, config pages (skip if none) |
 | **Changelog** | 📝 | Leaf page | Reverse-chronological log of meaningful shipped changes |
-| **Decision Log** | 🗂️ | Leaf page | Chronological record of product and technical decisions |
+| **Decision Log** | 🧭 | Leaf page | Chronological record of product and technical decisions |
 | **Strategy** | 🗺️ | Leaf page | Positioning, roadmap, why this exists (only create if there's real content) |
 
 ### Sub-pages (nested under section landing pages, NOT tagged "Top Level")
@@ -187,7 +188,7 @@ Workflow:
    - **Confirmed**: still-accurate content
 5. **Report diff** — show user before changing anything.
 6. **Approve changes** — let user pick which updates to apply.
-7. **Interview only on deltas** — don't re-ask things already answered.
+7. **Interview only on deltas** — don't re-ask things already answered. If new paid services were detected in the scan that aren't on the Costs page, include the Costs page in the delta interview using the same batched question format from `references/question-bank.md`.
 8. **Write updates** — modify pages in place. Set Verification back to Empty for any modified page. Add a changelog entry summarising what changed.
 9. **Confirm** — show user what was updated.
 

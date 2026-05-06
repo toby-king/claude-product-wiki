@@ -60,3 +60,9 @@ When called via `add-changelog`:
 - Entries that say nothing ("Various improvements")
 - Marketing language
 - Anything inferred — every entry needs a real source (a shipped change, a decision, a doc update)
+
+## Source notes
+
+- **All entries**: entirely user-stated — never infer or invent changelog entries
+- The page header callout is written on creation; entries are appended over time via `add-changelog`
+- Page-level Verification stays Empty on creation; adding entries does not change it — the user sets Verification when they're happy with the page

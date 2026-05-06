@@ -91,3 +91,11 @@ A short numbered list of 3–4 links — the most important pages for a reader w
 **Important**: this section is written with placeholder text when the Overview is first created (step 9d), because sub-pages don't exist yet. In step 9f, once all sub-pages have been created and have IDs, come back and update this section with real markdown links using the actual page URLs. Plain text or bold text is not acceptable — the reader must be able to click every link.
 
 Choose the 3–4 pages that give the most value in sequence. Do not just list every page — be selective.
+
+## Source notes
+
+- **What it is / Who it's for**: entirely user-stated
+- **Key facts table**: framework, runtime, database (code-verified); URLs, owner, AI model in use (user-stated)
+- **What it does**: bulleted features — scaffold from code paths and routes, confirm with user; explicitly infer where needed and flag as inferred
+- **Known gaps**: entirely user-stated — only include if the user confirms gaps exist; never invent
+- **Where to go next**: assembled from pages being built; filled with real links in step 9f

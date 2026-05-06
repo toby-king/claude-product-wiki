@@ -11,7 +11,7 @@ The core entities and their relationships. For DB-backed products, essential. Fo
 
 ## Icon and cover
 
-- **Icon**: 🗂️
+- **Icon**: 🗄️
 - **Cover**: data / structural-themed gallery image
 
 ## Body structure

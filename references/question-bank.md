@@ -10,6 +10,24 @@ Question patterns organised by page type. These are templates — adapt to what 
 - **Unknowns are fine** — if the user says "skip" or "I don't know", mark the section as TODO and move on.
 - **Numbered format** so the user can answer inline (e.g. "1. Yes, 2. Skip, 3. ...").
 
+## Start Here page
+
+Start Here is mostly assembled from content captured in other sections (Overview, Architecture, How To's). Draft it last so you can pull the best content forward. The only things to ask specifically for it are the quick-reference table values and the FAQ questions.
+
+Ask in one batch, after all other sections are done:
+
+"Almost finished — just a few things for the Start Here page:
+
+1. What's the production app URL? (I'll add it to the quick-reference table)
+2. What's the backend/API URL, if it's separate from the app?
+3. Who should be listed as owner on this wiki?
+4. What are the 2-3 questions someone new to this product would most likely ask? I'll already include 'How do I run it locally?' and 'How do I deploy?' — any others specific to {product}?"
+
+Rules:
+- Don't re-ask anything already captured in the Overview or Architecture interview.
+- The reading order list is derived from the pages being built — don't ask the user to define it.
+- If URLs were mentioned earlier in the interview, don't ask again — use what you have.
+
 ## Overview page
 
 Goal: one paragraph describing what the product is, who uses it, and what problem it solves.

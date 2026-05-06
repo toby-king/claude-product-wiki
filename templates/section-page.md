@@ -168,7 +168,7 @@ What you'll find here:
 ### Reference
 
 ```
-ℹ️  Lookup material for configuration, environment variables,
+ℹ️  Lookup material for costs, configuration, environment variables,
     and API endpoints.
 
 Use these pages when you need to check a specific value, understand
@@ -183,8 +183,16 @@ What you'll find here:
 ## Configuration
 
 @Environment Variables
+@Costs
 
 ## API
 
 @API Endpoints
 ```
+
+## Source notes
+
+- **Callout, purpose paragraph, bullet list**: written by the skill based on what sub-pages exist — no user input needed
+- **Sub-page links**: real page-mention blocks added in step 9f once sub-pages have IDs
+
+> **`@[Page]` notation**: in this template `@Page Name` is shorthand for a Notion page-mention block. When writing via the MCP, use the JSON format in `references/notion-structures.md` (Page mention in a bulleted list section) — not a plain URL or text link.

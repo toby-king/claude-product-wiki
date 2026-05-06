@@ -90,6 +90,13 @@ Keep answers short — the toggle is for quick orientation, not full documentati
 
 ---
 
+## Source notes
+
+- **One-liner paragraph**: assembled from the Overview interview — code-verified product description
+- **Reading order list**: derived from the pages being built — no user input needed
+- **Quick reference table**: owner (user-stated), app/API URLs (user-stated), status (user-stated), stack (code-verified from manifests), repos (code-verified)
+- **FAQ toggles**: user-stated — ask at the end of the interview for 2-3 product-specific questions; defaults (run locally, deploy, env vars) are always included
+
 ## Example finished page
 
 ```

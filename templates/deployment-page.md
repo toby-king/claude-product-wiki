@@ -11,7 +11,7 @@ Where the product runs in production and how it gets there.
 
 ## Icon and cover
 
-- **Icon**: 🚢
+- **Icon**: ☁️
 - **Cover**: deployment / infrastructure-themed gallery image
 
 ## Body structure

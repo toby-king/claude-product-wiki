@@ -15,7 +15,7 @@ Only create when the user has actual strategic content to capture: defined targe
 
 ## Icon and cover
 
-- **Icon**: 🎯
+- **Icon**: 🗺️
 - **Cover**: abstract / strategic-themed gallery image
 
 ## Body structure
@@ -68,3 +68,9 @@ Example format:
 - Roadmap (deferred)
 - Competitor matrix unless it directly informs positioning
 - Anything aspirational that the user hasn't actually committed to
+
+## Source notes
+
+- **All content**: entirely user-stated — every section requires explicit input; never infer strategic intent from code
+- Only create this page if the user has substantive content to capture; leave it out entirely if they don't
+- "Last reviewed" date: set to today on creation; update whenever the user revisits the page

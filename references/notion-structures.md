@@ -115,7 +115,7 @@ Replace the placeholder bullet items in the home page "Wiki sections" list with 
 
 ### User-provided parent
 
-If the user provides an existing Notion page as the parent location, use that page's ID as the parent for step 1 (the home page). Do NOT create the database directly inside the user's page — always create the home page first, then nest the database inside it.
+If the user provides an existing Notion page as the parent location, use that page's ID as the parent for step 1 (the home page). Do NOT skip the home page and create the database directly as a child of the user's page — always create the home page first (as a child of the user's page), then create the database as a sibling to the home page (also a child of the user's page, NOT nested inside the home page).
 
 ---
 
@@ -284,6 +284,68 @@ The Start Here page must be created with this exact structure. It is the entry p
 }
 ```
 
+### Mermaid diagram block
+
+Used on System Overview and Data Model pages. Produces a rendered diagram natively in Notion.
+
+```json
+{
+  "type": "code",
+  "code": {
+    "language": "mermaid",
+    "rich_text": [
+      {
+        "type": "text",
+        "text": {
+          "content": "flowchart LR\n  User[User Browser] --> Frontend[Next.js]\n  Frontend --> API[Express API]\n  API --> DB[(Supabase)]"
+        }
+      }
+    ]
+  }
+}
+```
+
+> **One block only**: produce exactly one mermaid code block per page. Do not also include a plain-text version, image, or second code block of the same diagram — it renders once and duplicates are visible.
+
+> **No `\n` literals in node labels**: use real newlines inside `content` (JSON `\n` escape is fine for line breaks between statements). Keep node labels short enough to avoid wrapping.
+
+### Table block
+
+Used for reference tables (key facts, component lists, env var summaries). `has_row_header: true` makes the first column bold.
+
+```json
+{
+  "type": "table",
+  "table": {
+    "table_width": 2,
+    "has_column_header": false,
+    "has_row_header": true,
+    "children": [
+      {
+        "type": "table_row",
+        "table_row": {
+          "cells": [
+            [{ "type": "text", "text": { "content": "Owner" }, "annotations": { "bold": true } }],
+            [{ "type": "text", "text": { "content": "Toby King" } }]
+          ]
+        }
+      },
+      {
+        "type": "table_row",
+        "table_row": {
+          "cells": [
+            [{ "type": "text", "text": { "content": "Status" }, "annotations": { "bold": true } }],
+            [{ "type": "text", "text": { "content": "🟢 Live" } }]
+          ]
+        }
+      }
+    ]
+  }
+}
+```
+
+Adjust `table_width` to match the number of columns. Add as many `table_row` children as needed.
+
 ### Status paragraph
 
 ```json
@@ -300,6 +362,30 @@ The Start Here page must be created with this exact structure. It is the entry p
   }
 }
 ```
+
+### Page mention in a bulleted list
+
+In templates, `@[Page Name]` is shorthand notation meaning "insert a Notion page-mention block here". It is not valid Notion API syntax on its own — when writing via MCP, use this block format:
+
+```json
+{
+  "type": "bulleted_list_item",
+  "bulleted_list_item": {
+    "rich_text": [
+      {
+        "type": "mention",
+        "mention": { "type": "page", "page": { "id": "<page-id>" } }
+      },
+      {
+        "type": "text",
+        "text": { "content": " — <one-liner describing the page>" }
+      }
+    ]
+  }
+}
+```
+
+Page mentions auto-update their display text if the page is renamed, and navigate on click. Plain text links do not. Always use page mention blocks, never plain URLs, when linking to sibling wiki pages.
 
 ### Column layout (two-column block)
 
@@ -425,7 +511,7 @@ The cover is what shows as the gallery card thumbnail — choose something visua
 | Start Here        | 👋    |
 | Overview          | 📋    |
 | Changelog         | 📝    |
-| Decision Log      | 🗂️   |
+| Decision Log      | 🧭    |
 | Strategy          | 🗺️   |
 | Architecture      | 🏗️   |
 | How To's          | 🤷    |
@@ -434,7 +520,7 @@ The cover is what shows as the gallery card thumbnail — choose something visua
 | Deployment        | ☁️   |
 | Integrations      | 🔌    |
 | Data Model        | 🗄️   |
-| System Overview   | 🗂️   |
+| System Overview   | 🌐    |
 | Key Workflows     | 🔄    |
 | Reference         | 📖    |
 | Env Vars          | 🔑    |

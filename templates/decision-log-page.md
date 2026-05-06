@@ -43,3 +43,9 @@ When first creating the page, ask the user if they want to seed it with one entr
 ## Avoiding decay
 
 Decision logs die when entries are added retrospectively because alternatives and reasoning fade. The skill should make `log-decision` very low-friction so capture happens at the moment of decision. The Slack bot integration (deferred) is the natural amplifier of this.
+
+## Source notes
+
+- **All entries**: entirely user-stated — never infer, reconstruct, or invent decisions
+- The page header callout and seed entry are written on creation; all subsequent entries are appended via `log-decision`
+- Page-level Verification stays Empty on creation; adding entries does not change it

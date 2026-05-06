@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__244fb9b7-1bdf-4224-ae95-cd947917c2bb__notion-fetch",
+      "mcp__244fb9b7-1bdf-4224-ae95-cd947917c2bb__notion-search",
+      "mcp__244fb9b7-1bdf-4224-ae95-cd947917c2bb__notion-create-view",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
+    ]
+  }
+}
