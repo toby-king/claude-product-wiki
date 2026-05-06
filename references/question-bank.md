@@ -122,6 +122,29 @@ Good questions per integration:
 - "Any rate limits, quotas, or cost considerations worth flagging?"
 - "Is there a fallback if {service} is down, or does the app just error?"
 
+## Costs page
+
+Always ask — this page is always created. The scan will have produced a list of likely paid services; use that list as the basis for the questions.
+
+Open with the list from the scan, then ask in one batch:
+
+"I found the following services that likely have running costs. For each, what plan or tier are you on and roughly what does it cost per month? 'Not sure' or 'free tier' is a fine answer — I'll mark it as Unknown rather than guess.
+
+- {Service A} ({why it likely costs — e.g. 'API usage'})
+- {Service B} ({e.g. 'hosting plan'})
+- {Service C} (...)
+
+Also — are there any other services, subscriptions, or infrastructure costs not visible in the code? Things like domain registration, DNS, error monitoring, analytics, or team tooling that should be counted here."
+
+Follow-up if totals seem incomplete:
+- "Is there anything you pay for on a yearly basis that should be reflected as a monthly figure?"
+- "Any services on free tiers you're likely to move to paid soon?"
+
+Rules:
+- Never ask about costs for services not detected in the code or mentioned by the user.
+- If the user is unsure of a figure, write `Unknown` — don't prompt them to estimate.
+- The final total row should reflect only confirmed figures; use `£X + unknowns` if some are unconfirmed.
+
 ## Reference pages (API, schema, configuration)
 
 Mostly auto-generated from code. Ask only when something is genuinely ambiguous:

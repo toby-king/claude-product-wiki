@@ -416,6 +416,7 @@ The cover is what shows as the gallery card thumbnail — choose something visua
 | Data Model        | Blueprint, schema diagram, grid               |
 | Reference         | Library shelves, index cards, filing cabinet  |
 | Env Vars          | Key, lock, configuration panel                |
+| Costs             | Calculator, invoice, coins, budget spreadsheet |
 
 ### Standard emoji by page type
 
@@ -437,6 +438,7 @@ The cover is what shows as the gallery card thumbnail — choose something visua
 | Key Workflows     | 🔄    |
 | Reference         | 📖    |
 | Env Vars          | 🔑    |
+| Costs             | 💰    |
 
 ---
 

@@ -89,9 +89,9 @@ Sub-pages live *inside* their section page. They appear as embedded page links i
 | Under Architecture | Under How To's | Under Integrations | Under Reference |
 |--------------------|----------------|--------------------|-----------------|
 | System Overview | Getting Started | One page per service | Environment Variables |
-| Data Model | Running Locally | | API Endpoints |
-| Key Workflows/ | Deployment | | (config, schema, etc.) |
-| └─ [one per major workflow] | | | |
+| Data Model | Running Locally | | **Costs** (always created) |
+| Key Workflows/ | Deployment | | API Endpoints |
+| └─ [one per major workflow] | | | (config, schema, etc.) |
 
 ## Section landing page pattern
 
@@ -282,6 +282,7 @@ For each page type, follow the structure in `templates/`:
 - `templates/deployment-page.md` — Deployment page (sub-page under How To's)
 - `templates/integration-page.md` — Per-integration page (sub-page under Integrations)
 - `templates/reference-page.md` — Generic reference page (API, schema) (sub-page under Reference)
+- `templates/costs-page.md` — Costs page: monthly running costs across all paid services (sub-page under Reference, always created)
 
 **Product / governance pages:**
 - `templates/strategy-page.md` — Strategy page (use sparingly, only if real content exists)
@@ -298,6 +299,7 @@ Before submitting any pages to Notion, verify:
 - [ ] Every dependency mentioned exists in a real manifest file
 - [ ] Every env var mentioned is actually referenced in code
 - [ ] Every integration mentioned has a real SDK import or API call
+- [ ] No costs, pricing tiers, or usage figures on the Costs page were invented — every figure came from the user
 - [ ] Every route mentioned is really registered
 - [ ] Every "we decided X" or "the team does Y" came from the user
 - [ ] No invented version numbers, dates, team sizes, or metrics

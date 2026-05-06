@@ -159,6 +159,38 @@ Frameworks:
 
 Top-level tree, one level deep, with a one-line purpose per directory where confidently inferable. Mark inferences as inferred.
 
+## Likely paid services (feeds the Costs page interview)
+
+After detecting external services, flag which ones typically have costs so the interview can ask about them specifically. Never invent costs — this step only identifies candidates.
+
+Common paid services and what to check:
+
+| Service detected | Likely cost driver |
+|---|---|
+| Anthropic / OpenAI / other LLM API | Per-token API usage |
+| Supabase | Database plan (free tier has limits) |
+| Stripe | Transaction fees (not a monthly line, but worth noting) |
+| Vercel | Hosting plan (Pro if team, otherwise free) |
+| Railway | Compute / resource usage |
+| Render | Compute plan |
+| AWS / GCP / Azure | Varies widely — flag for user to confirm |
+| SendGrid / Postmark / Resend | Email volume plan |
+| Twilio | SMS/call usage |
+| ElevenLabs | Audio generation usage |
+| Langfuse | Observability plan |
+| Clerk / Auth0 | Auth MAU plan |
+| Pinecone | Vector DB plan |
+| Planetscale / Neon | Database plan |
+| Sentry / Datadog / LogRocket | Monitoring plan |
+| GitHub | Team / Enterprise plan if not on free |
+
+Also check:
+- `package.json` / requirements for any commercial SDK packages
+- Deployment config for multiple services (each may have its own cost)
+- Any `BILLING_*`, `SUBSCRIPTION_*`, or `PLAN_*` env vars that hint at a managed billing integration
+
+Produce a list of "likely paid services" to take into the Costs interview. Do not guess tiers or figures.
+
 ## Red flags to surface
 
 Worth mentioning explicitly:
