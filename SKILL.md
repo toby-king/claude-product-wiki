@@ -135,19 +135,19 @@ Workflow:
 9. **Write to Notion** — follow `references/notion-structures.md` exactly. The creation order below is mandatory — each step depends on the previous one having IDs to reference.
 
    **9a — Create the home page (always, no exceptions)**
-   Create a regular Notion page as the wiki's landing page. This is what users navigate to — it is NOT the database. Body content: product callout + status paragraph + "Wiki sections" heading + placeholder bullet list (will be filled with real page-mention links in step 9g). Parent: the user's chosen location.
+   Create a regular Notion page as the wiki's landing page. This is what users navigate to — it is NOT the database. Body content (top to bottom): status paragraph + callout (💡, gray_background) + divider + two-column layout (left column: "Wiki sections" heading + description + placeholder bullet list; right column: empty for now — the inline gallery block is placed here manually after step 9c). Parent: the user's chosen location.
 
    **9b — Create the database at the same level as the home page**
    `parent.page_id = <user_chosen_parent_id>` — the same parent the home page lives in, NOT inside the home page. If you nest the database inside the home page, it appears as a closed database block in the page body AND the inline gallery also appears, giving a confusing duplicate. Keep them as siblings.
 
    **9c — Create views in this exact order (order determines default)**
-   1. **Home** — gallery, filtered to Tags contains "Top Level", card preview = page_cover. First = default.
+   1. **Home** — gallery, filtered to Tags contains "Top Level", card preview = page_cover, grouped by Tags (hide empty groups, manual sort). First view created = default.
    2. **All Pages** — table, showing Page, Owner, Tags, Verification, Last edited time.
 
-   Then embed the gallery directly on the home page body:
+   Then embed the gallery inline on the home page:
    - Call `notion-create-view` with `parent_page_id = <home_page_id>` and `data_source_id = <database_id>`
-   - type = gallery, filter = Tags contains "Top Level", card_preview = page_cover
-   This creates a single inline gallery block on the home page. No separate database block, no duplicate.
+   - type = gallery, filter = Tags contains "Top Level", card_preview = page_cover, group_by = Tags
+   - Notion places this block at the bottom of the page. After the build, drag it into the right column in the Notion UI and adjust the column divider to ~25/75 width.
 
    **9d — Create all top-level pages inside the database**
    Parent = database ID. Order: Start Here → Overview → section landing pages → leaf pages. Every page gets a cover image, emoji icon, Verification = Empty, Owner, and Tags.
@@ -165,7 +165,13 @@ Workflow:
    **9g — Insert real page-mention links into the home page**
    Update the home page's "Wiki sections" bullet list with page-mention links to every top-level page now that they have IDs.
 
-10. **Confirm** — share the **home page URL** (not the database URL) with the user. State how many pages were created and flag any sections needing manual input.
+10. **Confirm** — share the **home page URL** (not the database URL) with the user. State how many pages were created and flag any sections needing manual input. Always end with this exact note:
+
+   > **Two quick manual steps to finish the home page layout:**
+   > 1. Open the home page in Notion. The gallery view will be sitting at the bottom of the page — drag it up into the right column.
+   > 2. Drag the column divider left until the left column is roughly 25% wide and the right column is 75%. This gives the nav list / gallery split its intended look.
+   >
+   > Everything else is done.
 
 ### `update` — Refresh an existing wiki against the current codebase
 
@@ -243,7 +249,7 @@ The skill uses the Notion MCP to read and write pages. Key operations:
 
 - **Find parent page** — search for the product/company parent page where the wiki should live
 - **Create database** — `notion-create-database` creates an inline database on a parent page with the standard properties schema (Name/title, Owner/people, Verification/status, Tags/multi-select, Created time, Last edited time). Sub-pages live inside this database.
-- **Set gallery view** — `notion-create-view` on the database with type = gallery and card_preview = page_cover. This is how the gallery card layout is established.
+- **Set gallery view** — `notion-create-view` on the database with type = gallery, card_preview = page_cover, and group_by = Tags. This is how the gallery card layout and tag grouping is established.
 - **Create page** — with title, icon (emoji), cover, properties, and body blocks. When creating sub-pages, parent must be the database ID (not the parent page ID), so they appear as gallery entries.
 - **Update page** — modify properties or body blocks
 - **Append blocks** — add to an existing page (used heavily for changelog and decision log)

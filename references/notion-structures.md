@@ -6,19 +6,21 @@ This reference covers how to assemble the wiki parent page and its sub-pages via
 
 ## Home page shape
 
-The home page is a regular Notion page — NOT the database itself. It is the URL you share with users. The database lives inside it as a child (visible in the sidebar under the home page).
+The home page is a regular Notion page — NOT the database itself. It is the URL you share with users. The database is a sibling page (same parent, visible in the sidebar alongside the home page).
 
 Structure (top to bottom):
 
 1. **Cover image** — full-width banner relevant to the product
 2. **Emoji icon** — topical to the product
 3. **Title** — the product name
-4. **Callout block** — 💡 icon, `gray_background`, product one-liner (what it does and for whom)
-5. **Status paragraph** — bold, `🟢 Status: [live status description]`. 🟢 live, 🟡 beta/in-progress, 🔴 down/deprecated.
+4. **Status paragraph** — bold, `🟢 Status: [live status description]`. 🟢 live, 🟡 beta/in-progress, 🔴 down/deprecated.
+5. **Callout block** — 💡 icon, `gray_background`, product one-liner (what it does and for whom)
 6. **Divider**
-7. **Heading 2** — "Wiki sections"
-8. **Paragraph** — "Jump to any section, or open the gallery to browse all pages."
-9. **Bulleted list** — one item per top-level wiki page, each a real Notion page-mention link (added in step 9g once page IDs exist — use a placeholder first pass if needed)
+7. **Two-column layout** (column_list block):
+   - **Left column** (~25% width): Heading 2 "Wiki sections" + short description paragraph + bulleted list of page-mention links to every top-level page (added in step 9g once page IDs exist — use placeholder text on first pass)
+   - **Right column** (~75% width): Inline gallery view of the database, grouped by Tags, cover images, filtered to `Top Level` pages
+
+> **Column width ratio**: Notion's public API always creates equal-width columns. After the build completes, drag the column divider in the Notion UI to set the ~25/75 split.
 
 ---
 
@@ -35,12 +37,16 @@ notion-create-pages:
   icon: <topical emoji>
   cover: <relevant image>
   children:
-    - callout block (💡, gray_background, product one-liner)
     - status paragraph (bold, 🟢/🟡/🔴 Status: ...)
+    - callout block (💡, gray_background, product one-liner)
     - divider
-    - heading_2: "Wiki sections"
-    - paragraph: "Jump to any section, or open the gallery to browse all pages."
-    - bulleted_list_item × N (placeholder text for now — real mentions added in step 7)
+    - column_list:
+        - column (left):
+            - heading_2: "Wiki sections"
+            - paragraph: "Jump directly to a section, or browse everything in the gallery below."
+            - bulleted_list_item × N (placeholder text for now — real mentions added in step 7)
+        - column (right):
+            - [leave empty — the inline gallery view is placed here in step 3b]
 ```
 
 **Step 2 — Create the database at the same level as the home page**
@@ -65,6 +71,7 @@ View 1 (default): notion-create-view
   filter: Tags contains "Top Level"
   card_preview: page_cover
   display_properties: [Page]
+  group_by: Tags (multi_select, hide_empty_groups: true, sort: manual)
 
 View 2: notion-create-view
   name: "All Pages"
@@ -72,9 +79,9 @@ View 2: notion-create-view
   display_properties: [Page, Owner, Tags, Verification, Last edited time]
 ```
 
-**Step 3b — Embed the gallery inline on the home page**
+**Step 3b — Embed the gallery inline in the right column of the home page**
 
-After creating the views, embed the gallery directly in the home page body. This is what the user sees when they land on the home page.
+After creating the views, embed a gallery inline on the home page. This goes into the right column of the column_list created in step 1.
 
 ```
 notion-create-view:
@@ -84,9 +91,11 @@ notion-create-view:
   type: gallery
   filter: Tags contains "Top Level"
   card_preview: page_cover
+  group_by: Tags (multi_select, hide_empty_groups: true, sort: manual)
+  display_properties: [Page]
 ```
 
-This creates a single inline gallery block on the home page. Because the database is a sibling (not a child), there is no duplicate database block in the body.
+This creates an inline gallery block on the home page. Notion will place it at the bottom of the page — after the build completes, drag it into the right column in the Notion UI. Because the database is a sibling (not a child), there is no duplicate database block in the body.
 
 **Step 4 — Create all top-level pages inside the database**
 
@@ -292,6 +301,47 @@ The Start Here page must be created with this exact structure. It is the entry p
 }
 ```
 
+### Column layout (two-column block)
+
+Used for the home page body. Left column holds the wiki nav list; right column holds the inline gallery view.
+
+```json
+{
+  "type": "column_list",
+  "column_list": {
+    "children": [
+      {
+        "type": "column",
+        "column": {
+          "children": [
+            {
+              "type": "heading_2",
+              "heading_2": {
+                "rich_text": [{ "type": "text", "text": { "content": "Wiki sections" } }]
+              }
+            },
+            {
+              "type": "paragraph",
+              "paragraph": {
+                "rich_text": [{ "type": "text", "text": { "content": "Jump directly to a section, or browse everything in the gallery below." } }]
+              }
+            }
+          ]
+        }
+      },
+      {
+        "type": "column",
+        "column": {
+          "children": []
+        }
+      }
+    ]
+  }
+}
+```
+
+> **Column width**: Notion's public API creates equal-width columns (50/50). To achieve the ~25/75 split, drag the column divider in Notion after the build completes.
+
 ---
 
 ## Database properties schema
@@ -315,12 +365,14 @@ Create the database with these properties so sub-pages carry the standard metada
   "Tags": {
     "multi_select": {
       "options": [
+        { "name": "Top Level" },
         { "name": "Overview" },
         { "name": "How To" },
         { "name": "How We Work" },
         { "name": "SOP" },
         { "name": "Technical" },
-        { "name": "Product" }
+        { "name": "Product" },
+        { "name": "Reference" }
       ]
     }
   },
